@@ -1,0 +1,252 @@
+import React from 'react';
+import { Printer, Car, ShieldCheck, FileText, QrCode, CreditCard, Landmark } from 'lucide-react';
+
+const App = () => {
+  // Datos de producción basados en tus documentos
+  const data = {
+    emisor: {
+      nombre: "CORPORATIVO AXEL SA",
+      comercial: "CORPORATIVO AXEL SA",
+      rfc: "GACX701018138"
+      direccion: "CALLE 70-A LOTE 6 A, COL NUEVA MULSAY MERIDA YUCATAN CP 97249",
+      regimen: "612 - PERSONAS FÍSICAS CON ACTIVIDADES EMPRESARIALES Y PROFESIONALES",
+      eslogan: "AUTOS, MOTOS, CAMIONETAS, CAMIONES USADOS Y SEMINUEVOS"
+    },
+    receptor: {
+      nombre: "CELEDON AYALA DANIEL LUIS",
+      rfc: "XAXX010101000",
+      cp: "66430",
+      regimen: "616 - SIN OBLIGACIONES FISCALES",
+      uso: "S01 - SIN EFECTOS FISCALES"
+    },
+    factura: {
+      folio: "0940",
+      uuid: "C662A7BB-DF4D-4678-91A5-A2822575B1DE",
+      csd: "00001000000712388435",
+      fecha: "2026-05-02 16:43:11",
+      metodo: "PUE - PAGO EN UNA SOLA EXHIBICIÓN",
+      forma: "01 - EFECTIVO",
+      moneda: "MXN - PESO MEXICANO"
+    },
+    vehiculo: {
+      descripcion: "DODGE RAM 1500",
+      modelo: "2003",
+      vin: "1D7HA18N33J560582",
+      motor: "8 CILINDROS",
+      color: "BLANCO",
+      extras: "TÍTULO DE PROPIEDAD No. M20290745854 (MISSISSIPPI, EUA)",
+      precio: 120000.00
+    },
+    sellos: {
+      satCert: "00001000000705250068",
+      fechaCert: "2026-05-02 16:43:44",
+      qrData: "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id=C662A7BB-DF4D-4678-91A5-A2822575B1DE"
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-neutral-100 py-12 px-4 flex flex-col items-center print:bg-white print:py-0">
+      
+      {/* Action Header - No se imprime */}
+      <div className="mb-8 flex gap-4 print:hidden">
+        <button 
+          onClick={() => window.print()}
+          className="flex items-center gap-2 bg-red-600 text-white px-8 py-3 rounded-md font-bold hover:bg-red-700 transition shadow-xl"
+        >
+          <Printer size={20} /> IMPRIMIR FACTURA DE AGENCIA
+        </button>
+      </div>
+
+      {/* Invoice Container */}
+      <div className="relative w-full max-w-[900px] bg-white p-10 shadow-2xl border-t-[10px] border-red-600 print:shadow-none print:border-t-0 overflow-hidden">
+        
+        {/* Marca de Agua */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
+          <Car size={500} className="text-red-600 rotate-[-15deg]" />
+        </div>
+
+        {/* Encabezado Principal */}
+        <div className="relative z-10 flex justify-between items-start mb-10 border-b-2 border-neutral-100 pb-8">
+          <div className="flex gap-4 items-center">
+            <div className="bg-red-600 p-3 rounded-sm shadow-lg">
+              <Car size={48} className="text-white" strokeWidth={2.5} />
+            </div>
+            <div>
+              <h1 className="text-4xl font-black italic tracking-tighter text-neutral-900 leading-none uppercase">DODGE</h1>
+              <p className="text-[10px] font-bold text-red-600 tracking-[0.4em] mt-1 uppercase">Seminuevos Certificados</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <h2 className="text-red-600 font-black text-2xl tracking-tighter">FOLIO: {data.factura.folio}</h2>
+            <div className="mt-4 text-[11px] font-bold text-neutral-800 space-y-0.5 uppercase">
+              <p className="text-sm font-black text-neutral-900">EMISOR: {data.emisor.nombre}</p>
+              <p>RFC: {data.emisor.rfc}</p>
+              <p className="text-neutral-500 lowercase first-letter:uppercase">{data.emisor.direccion}</p>
+              <p className="text-blue-700 mt-2 tracking-widest text-[9px]">{data.emisor.eslogan}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Banners de Datos (Azul de Referencia) */}
+        <div className="relative z-10 grid grid-cols-2 gap-0 border-2 border-blue-900 mb-8 overflow-hidden rounded-sm">
+          <div className="border-r-2 border-blue-900">
+            <div className="bg-blue-900 text-white text-[11px] font-black px-4 py-2 uppercase tracking-widest flex items-center gap-2">
+              <FileText size={14} /> Datos del Comprador
+            </div>
+            <div className="p-4 text-[12px] space-y-1.5">
+              <p className="font-black text-neutral-900 text-base">{data.receptor.nombre}</p>
+              <p className="font-bold text-neutral-500">RFC: {data.receptor.rfc}</p>
+              <div className="grid grid-cols-2 text-[10px] text-neutral-400 font-bold uppercase mt-2">
+                <span>Régimen: {data.receptor.regimen}</span>
+                <span>CP: {data.receptor.cp}</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className="bg-blue-900 text-white text-[11px] font-black px-4 py-2 uppercase tracking-widest flex items-center gap-2">
+              <ShieldCheck size={14} /> Información Fiscal
+            </div>
+            <div className="p-4 text-[10px] space-y-2 font-mono">
+              <p><span className="font-bold text-neutral-400">UUID:</span> <span className="text-neutral-900 font-bold">{data.factura.uuid}</span></p>
+              <p><span className="font-bold text-neutral-400">SERIE CSD:</span> <span className="text-neutral-900">{data.factura.csd}</span></p>
+              <div className="flex justify-between border-t border-neutral-100 pt-1">
+                <span>FECHA: {data.factura.fecha}</span>
+                <span className="text-red-600 font-bold">USO: {data.receptor.uso}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tabla de Conceptos Estilo Agencia */}
+        <div className="relative z-10 border-2 border-blue-900 mb-8 rounded-sm overflow-hidden shadow-sm">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-neutral-50 border-b-2 border-blue-900 text-[10px] font-black uppercase text-neutral-600">
+                <th className="py-3 px-4 text-left w-2/3">Descripción Detallada del Activo</th>
+                <th className="py-3 px-2 border-l-2 border-blue-900">Clave</th>
+                <th className="py-3 px-2 border-l-2 border-blue-900">Cant.</th>
+                <th className="py-3 px-2 border-l-2 border-blue-900">Unidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="p-6 text-left align-top">
+                  <p className="text-sm font-black text-blue-900 mb-4 underline decoration-red-600 decoration-2 underline-offset-8 uppercase italic">
+                    Unidad Seminueva Certificada - Condiciones Físicas y Mecánicas Excelentes:
+                  </p>
+                  <div className="grid grid-cols-2 gap-x-12 gap-y-2 text-[12px] font-bold">
+                    <div className="flex justify-between border-b border-neutral-100 pb-1 uppercase"><span>Marca:</span> <span className="text-neutral-900 font-black tracking-tighter">{data.vehiculo.marca}</span></div>
+                    <div className="flex justify-between border-b border-neutral-100 pb-1 uppercase"><span>Línea:</span> <span className="text-neutral-900 font-black tracking-tighter">{data.vehiculo.linea}</span></div>
+                    <div className="flex justify-between border-b border-neutral-100 pb-1 uppercase"><span>Modelo:</span> <span className="text-neutral-900 font-black tracking-tighter">{data.vehiculo.modelo}</span></div>
+                    <div className="flex justify-between border-b border-neutral-100 pb-1 uppercase font-mono"><span>VIN:</span> <span className="text-neutral-900 font-black">{data.vehiculo.vin}</span></div>
+                    <div className="flex justify-between border-b border-neutral-100 pb-1 uppercase"><span>Motor:</span> <span className="text-neutral-900 font-black">{data.vehiculo.motor}</span></div>
+                    <div className="flex justify-between border-b border-neutral-100 pb-1 uppercase"><span>Color:</span> <span className="text-neutral-900 font-black">{data.vehiculo.color}</span></div>
+                  </div>
+                  <div className="mt-8 p-3 bg-blue-50/50 border-l-4 border-blue-900 rounded-r-md">
+                    <p className="text-[9px] font-black text-blue-900 uppercase mb-1">Respaldo Documental de Origen:</p>
+                    <p className="text-[11px] font-bold text-neutral-700 italic uppercase leading-tight">{data.vehiculo.extras}</p>
+                  </div>
+                </td>
+                <td className="py-6 px-2 border-l-2 border-blue-900 align-top text-center font-mono font-bold text-neutral-400">25101507</td>
+                <td className="py-6 px-2 border-l-2 border-blue-900 align-top text-center font-black text-lg">01</td>
+                <td className="py-6 px-2 border-l-2 border-blue-900 align-top text-center font-bold text-xs uppercase text-neutral-400 underline underline-offset-4 decoration-red-600">Pieza</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* Footer Financiero */}
+        <div className="relative z-10 flex justify-between items-start mb-10">
+          <div className="w-[60%]">
+            <div className="bg-blue-900 text-white text-[10px] font-black px-4 py-1 uppercase w-fit rounded-t-sm tracking-widest">
+              Importe con Letra
+            </div>
+            <div className="border-2 border-blue-900 p-4 bg-neutral-50 rounded-b-sm rounded-r-sm">
+              <p className="text-sm font-black text-blue-900 uppercase italic">CIENTO VEINTE MIL PESOS 00/100 M.N.</p>
+            </div>
+          </div>
+          <div className="w-[35%] bg-white p-4 border-2 border-blue-900 rounded-sm">
+            <div className="space-y-2 text-xs font-bold text-neutral-500">
+              <div className="flex justify-between"><span>SUBTOTAL</span> <span className="text-neutral-900 font-mono tracking-tighter">${data.vehiculo.precio.toLocaleString()}.00</span></div>
+              <div className="flex justify-between"><span>DESCUENTO</span> <span className="text-neutral-900 font-mono tracking-tighter">$0.00</span></div>
+              <div className="flex justify-between"><span>I.V.A. (0%)</span> <span className="text-neutral-900 font-mono tracking-tighter">$0.00</span></div>
+              <div className="border-t-2 border-neutral-900 pt-3 flex justify-between items-baseline">
+                <span className="text-lg font-black text-blue-900">TOTAL</span>
+                <span className="text-2xl font-black text-blue-900 font-mono tracking-tighter">${data.vehiculo.precio.toLocaleString()}.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Grid de Pagos (Reference Match) */}
+        <div className="relative z-10 grid grid-cols-3 border-2 border-blue-900 text-center mb-8 rounded-sm overflow-hidden">
+          <div className="border-r-2 border-blue-900 p-2 bg-neutral-50">
+            <div className="flex items-center justify-center gap-1 text-[9px] font-black text-blue-900 uppercase mb-1">
+              <CreditCard size={12} /> Forma de Pago
+            </div>
+            <p className="text-[11px] font-black uppercase text-neutral-900 leading-tight">{data.factura.forma}</p>
+          </div>
+          <div className="border-r-2 border-blue-900 p-2 bg-white">
+            <div className="flex items-center justify-center gap-1 text-[9px] font-black text-blue-900 uppercase mb-1">
+              <Landmark size={12} /> Método de Pago
+            </div>
+            <p className="text-[10px] font-black uppercase text-neutral-900 leading-tight truncate px-1">{data.factura.metodo}</p>
+          </div>
+          <div className="p-2 bg-neutral-50">
+            <div className="flex items-center justify-center gap-1 text-[9px] font-black text-blue-900 uppercase mb-1">
+              <Globe size={12} /> Moneda
+            </div>
+            <p className="text-[11px] font-black uppercase text-neutral-900 leading-tight">{data.factura.moneda}</p>
+          </div>
+        </div>
+
+        {/* Sello y Certificación SAT */}
+        <div className="relative z-10 flex border-t-4 border-neutral-900 pt-10 gap-10">
+          <div className="w-1/4 flex flex-col items-center">
+             <div className="p-2 border-2 border-neutral-200 bg-white shadow-inner">
+               <img src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(data.sellos.qrData)}`} className="w-36 h-36" alt="SAT QR" />
+             </div>
+             <p className="text-[8px] font-black text-neutral-400 mt-3 uppercase tracking-[0.2em]">CFDI v4.0 Oficial</p>
+          </div>
+          
+          <div className="w-3/4 space-y-4">
+            <div className="space-y-1">
+              <h4 className="text-[9px] font-black text-neutral-400 uppercase">Sello Digital del Emisor</h4>
+              <p className="text-[7.5px] font-mono leading-[0.8] text-neutral-400 break-all bg-neutral-50 p-2 border border-neutral-100 rounded-sm">1e5o/tPzmcfYNa8j9t5PhBX6LJrsKFx+9Xgp71/xOatupCYKNwp86Q6nYuazAl2RjCh0FpZ7rcITZ+ofY1FWBYXcXF+wEr5fQCFwkh8erUmapGe0qZoWV2GXmR18110BCMwy+onbScobrd4es4CKPcGyclMKLLsSajsHx4gl4/JMNQ0u8sVj1AjUV3lcJVQzsh3WjeulFe4sP29VLrPN/V3meA3f3QBtS64qqziXsc4RscgGVneAh7LAzROgqhB9MDx6HfX3qgu7G2QHkiCqRqJ1vQzqCZTj+mjHXVz+TJ9nYmwqLgLNM+948PsEwfnWi9VA==</p>
+            </div>
+            
+            <div className="space-y-1">
+              <h4 className="text-[9px] font-black text-neutral-400 uppercase">Sello Digital del SAT</h4>
+              <p className="text-[7.5px] font-mono leading-[0.8] text-neutral-400 break-all bg-neutral-50 p-2 border border-neutral-100 rounded-sm">U8Fhof3pRJPKjHZPTYk5VrZViK4bqhRvtNrJIUur/r8PLg5+MV2bSVd2EKa22gCYoCRwdroT1iobSXIDv+OKu4fReJJirA1rTsrjQGOc2iotnLjzjxL1+fitDd4ZSVlalh418DbeN4can7Inbvf5gqrEyl9CN0C4U8LyssCTZevLuQNAZFmG2s3Um+mnt4ITCoDzX2+U/jE4TLpIGMEaL9K4tpmHU7nJ1NaDNXDu2K6jalm9qKWeVsMJiPkcO95QGdAXiqTlbFt4C2PQzMhAxoa7qSK1gcCUGNysL/pmNHrWPSwwtleWO95w10XIOMFAVCfQVAHFYMaw35gBpAX2A==</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-8 text-[9px] pt-2 border-t border-neutral-100">
+              <div className="flex flex-col">
+                <span className="text-neutral-400 font-bold uppercase tracking-wider">No. Serie Certificado SAT</span>
+                <span className="font-mono font-black text-neutral-700">{data.sellos.satCert}</span>
+              </div>
+              <div className="flex flex-col text-right">
+                <span className="text-neutral-400 font-bold uppercase tracking-wider">Certificación</span>
+                <span className="font-mono font-black text-neutral-700 underline decoration-red-600 underline-offset-4">{data.sellos.fechaCert}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Leyenda */}
+        <div className="mt-12 text-center text-neutral-300 text-[9px] font-black uppercase tracking-widest leading-relaxed border-t border-neutral-50 pt-6">
+          <p>Este documento es una representación impresa de un CFDI v4.0</p>
+          <p className="mt-1 text-neutral-400">Página 1 de 1 - Original de Agencia</p>
+        </div>
+
+      </div>
+      
+      {/* Dev Signature */}
+      <footer className="mt-8 text-neutral-400 text-[10px] font-mono uppercase tracking-[0.5em] print:hidden">
+        Powered by Servicios Digitales MX / Sr. Fix v4.1
+      </footer>
+    </div>
+  );
+};
+
+export default App;
